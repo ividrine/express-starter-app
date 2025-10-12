@@ -4,7 +4,7 @@ import bcrypt from "bcrypt";
 import { User } from "@prisma/client";
 import prisma from "../lib/prisma/index.js";
 import type { PaginationArgs } from "../lib/prisma/extensions/paginate.js";
-import { InsertableUser, SelectableUser } from "../types/user.js";
+import { InsertableUser, SelectableUser } from "../types/user.type.js";
 
 const salt = 10;
 

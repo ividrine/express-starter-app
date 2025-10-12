@@ -7,7 +7,7 @@ import jwt from "jsonwebtoken";
 import prisma from "../lib/prisma/index.js";
 import { Role, TokenType } from "@prisma/client";
 
-import type { AuthUser } from "../types/user.js";
+import type { AuthUser } from "../types/user.type.js";
 
 const {
   issuer,
@@ -66,8 +66,14 @@ const verifyToken = async (token: string, type: string) => {
 };
 
 const generateAuthTokens = async (user: AuthUser) => {
-  const accessTokenExpires = dayjs().add(accessExpirationMinutes, "minutes");
-  const refreshTokenExpires = dayjs().add(refreshExpirationDays, "days");
+  const accessTokenExpires = dayjs().add(
+    accessExpirationMinutes as number,
+    "minutes"
+  );
+  const refreshTokenExpires = dayjs().add(
+    refreshExpirationDays as number,
+    "days"
+  );
 
   const accessToken = generateToken(
     user.id,
@@ -109,7 +115,10 @@ const generateResetPasswordToken = async (email: string) => {
     throw new ApiError(httpStatus.NOT_FOUND, "No users found with this email");
   }
 
-  const expires = dayjs().add(resetPasswordExpirationMinutes, "minutes");
+  const expires = dayjs().add(
+    resetPasswordExpirationMinutes as number,
+    "minutes"
+  );
 
   const resetPasswordToken = generateToken(
     user.id,
@@ -129,7 +138,10 @@ const generateResetPasswordToken = async (email: string) => {
 };
 
 const generateVerifyEmailToken = async (userId: string, role: Role) => {
-  const expires = dayjs().add(verifyEmailExpirationMinutes, "minutes");
+  const expires = dayjs().add(
+    verifyEmailExpirationMinutes as number,
+    "minutes"
+  );
 
   const verifyEmailToken = generateToken(
     userId,

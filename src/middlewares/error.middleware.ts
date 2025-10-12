@@ -3,22 +3,18 @@ import httpStatus from "http-status";
 import config from "../config/config.js";
 import logger from "../config/logger.js";
 import ApiError from "../utils/ApiError.js";
-
-import type { BaseError } from "../types/error.js";
+import { SERVER_ERROR } from "../constants/error.constants.js";
 
 export const errorConverter = (
-  err: BaseError,
+  err: Error,
   req: Request,
   res: Response,
   next: NextFunction
 ) => {
   let error = err;
   if (!(error instanceof ApiError)) {
-    const statusCode = err.statusCode
-      ? httpStatus.BAD_REQUEST
-      : httpStatus.INTERNAL_SERVER_ERROR;
-    // eslint-disable-next-line security/detect-object-injection
-    const message = error.message || httpStatus[statusCode];
+    const statusCode = httpStatus.INTERNAL_SERVER_ERROR;
+    const message = SERVER_ERROR;
     error = new ApiError(statusCode, message, false, err.stack);
   }
   next(error);

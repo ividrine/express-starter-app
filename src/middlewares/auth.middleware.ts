@@ -1,52 +1,50 @@
-import { auth } from "express-oauth2-jwt-bearer";
-import config from "../config/config.js";
 import httpStatus from "http-status";
-import type { Request, Response, NextFunction } from "express";
+import jwt from "jsonwebtoken";
+import config from "../config/config.js";
 import ApiError from "../utils/ApiError.js";
-import { TokenType, Role } from "@prisma/client";
+import { TokenType } from "@prisma/client";
 import { ROLE_PRIVILEGES } from "../constants/role.constants.js";
 
-const { secret, issuer, audience } = config.jwt;
+import type { Request, Response, NextFunction } from "express";
+import type { AuthPayload } from "../types/jwt.type.js";
+import type { AuthRequest } from "../types/request.type.js";
+
+const { secret } = config.jwt;
 
 const authorize =
   (...permissions: string[]) =>
-  (req: Request, res: Response, next: NextFunction) => {
-    return new Promise<void>((resolve, reject) => {
-      auth({
-        secret,
-        issuer,
-        audience,
-        tokenSigningAlg: "HS256"
-      })(req, res, (err) => {
-        const payload = req.auth?.payload;
+  async (req: Request, res: Response, next: NextFunction) => {
+    const token = req?.headers?.authorization?.replace("Bearer ", "");
 
-        if (err) {
-          return reject(new ApiError(httpStatus.UNAUTHORIZED, "Invalid token"));
-        }
+    if (!token) {
+      return next(new ApiError(httpStatus.UNAUTHORIZED, "Invalid token"));
+    }
 
-        if (payload?.type != TokenType.ACCESS) {
-          return reject(new ApiError(httpStatus.UNAUTHORIZED, "Invalid token"));
-        }
+    jwt.verify(token, secret, async (err, payload) => {
+      if (err) {
+        return next(new ApiError(httpStatus.UNAUTHORIZED, "Invalid token"));
+      }
 
-        const privileges = ROLE_PRIVILEGES.get(
-          payload?.role as Role
-        ) as string[];
+      const authPayload = payload as AuthPayload;
 
-        const hasPrivileges = permissions.every((permission) =>
-          privileges.includes(permission)
-        );
+      if (authPayload.type !== TokenType.ACCESS) {
+        return next(new ApiError(httpStatus.UNAUTHORIZED, "Invalid token"));
+      }
 
-        // This is an import condition.
-        // On /:userId routes a user doesn't need specific permissions to access / modify their own data.
-        if (!hasPrivileges && req.params?.userId !== payload?.sub) {
-          return reject(new ApiError(httpStatus.FORBIDDEN, "Forbidden"));
-        }
+      const privileges = ROLE_PRIVILEGES[authPayload.role];
 
-        resolve();
-      });
-    })
-      .then(() => next())
-      .catch((err) => next(err));
+      const hasPrivileges = permissions?.every((permission) =>
+        privileges?.includes(permission)
+      );
+
+      if (!hasPrivileges && req.params?.userId !== authPayload.sub) {
+        return next(new ApiError(httpStatus.FORBIDDEN, "Forbidden"));
+      }
+
+      (req as AuthRequest).auth = { payload: payload as AuthPayload };
+
+      next();
+    });
   };
 
 export default authorize;

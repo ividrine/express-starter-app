@@ -1,12 +1,25 @@
-// Password
-export const PW_PATTERN =
-  "Password must contain at least 1 letter and 1 number";
-export const PW_LENGTH = "Password must be at least 8 characters";
-export const PW_REQUIRED = "Password is required";
+import * as z from "zod";
+import {
+  EMAIL_REQUIRED_ERROR,
+  EMAIL_INVALID_ERROR,
+  PW_LENGTH_ERROR,
+  PW_PATTERN_ERROR,
+  PW_REQUIRED_ERROR,
+  INVALID_TOKEN_ERROR
+} from "./error.constants.js";
 
-// Email
-export const EMAIL_REQUIRED = "Email is required";
-export const INVALID_EMAIL = "Invalid email";
+export const EMAIL = z.email({
+  error: (iss) =>
+    iss.input === undefined ? EMAIL_REQUIRED_ERROR : EMAIL_INVALID_ERROR
+});
 
-// Tokens
-export const INVALID_TOKEN = "Invalid token";
+export const PASSWORD = z
+  .string(PW_REQUIRED_ERROR)
+  .min(8, PW_LENGTH_ERROR)
+  .refine((password) => password.match(/\d/) && password.match(/[a-zA-Z]/), {
+    message: PW_PATTERN_ERROR
+  });
+
+export const PASSWORD_RELAXED = z.string().min(1, PW_REQUIRED_ERROR);
+
+export const TOKEN = z.string(INVALID_TOKEN_ERROR).min(1, INVALID_TOKEN_ERROR);

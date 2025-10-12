@@ -8,8 +8,7 @@ import ApiError from "../../../src/utils/ApiError.ts";
 import { describe, test, expect, vi, beforeEach } from "vitest";
 import logger from "../../../src/config/logger.ts";
 import config from "../../../src/config/config.ts";
-import type { BaseError } from "../../../src/types/error.ts";
-import type { NodeEnv } from "../../../src/types/env.ts";
+import type { NodeEnv } from "../../../src/types/env.type.ts";
 
 describe("Error middlewares", () => {
   describe("Error converter", () => {
@@ -27,72 +26,7 @@ describe("Error middlewares", () => {
       expect(next).toHaveBeenCalledWith(error);
     });
 
-    test("should convert an Error to ApiError and preserve its status and message", () => {
-      const error = new Error("Any error") as BaseError;
-      error.statusCode = httpStatus.BAD_REQUEST;
-      const next = vi.fn();
-
-      errorConverter(
-        error,
-        httpMocks.createRequest(),
-        httpMocks.createResponse(),
-        next
-      );
-
-      expect(next).toHaveBeenCalledWith(expect.any(ApiError));
-      expect(next).toHaveBeenCalledWith(
-        expect.objectContaining({
-          statusCode: error.statusCode,
-          message: error.message,
-          isOperational: false
-        })
-      );
-    });
-
-    test("should convert an Error without status to ApiError with status 500", () => {
-      const error = new Error("Any error");
-      const next = vi.fn();
-
-      errorConverter(
-        error,
-        httpMocks.createRequest(),
-        httpMocks.createResponse(),
-        next
-      );
-
-      expect(next).toHaveBeenCalledWith(expect.any(ApiError));
-      expect(next).toHaveBeenCalledWith(
-        expect.objectContaining({
-          statusCode: httpStatus.INTERNAL_SERVER_ERROR,
-          message: error.message,
-          isOperational: false
-        })
-      );
-    });
-
-    test("should convert an Error without message to ApiError with default message of that http status", () => {
-      const error = new Error() as BaseError;
-      error.statusCode = httpStatus.BAD_REQUEST;
-      const next = vi.fn();
-
-      errorConverter(
-        error,
-        httpMocks.createRequest(),
-        httpMocks.createResponse(),
-        next
-      );
-
-      expect(next).toHaveBeenCalledWith(expect.any(ApiError));
-      expect(next).toHaveBeenCalledWith(
-        expect.objectContaining({
-          statusCode: error.statusCode,
-          message: httpStatus[error.statusCode],
-          isOperational: false
-        })
-      );
-    });
-
-    test("should convert any other object to ApiError with status 500 and its message", () => {
+    test("should convert Error to ApiError with status 500", () => {
       const error = new Error();
       const next = vi.fn();
 

@@ -7,9 +7,7 @@ import {
 
 import { Role } from "@prisma/client";
 
-const rolePrivileges = {
-  [Role.USER]: [],
+export const ROLE_PRIVILEGES = {
+  [Role.USER]: [] as string[],
   [Role.ADMIN]: [CREATE_USERS, READ_USERS, UPDATE_USERS, DELETE_USERS]
 };
-
-export const ROLE_PRIVILEGES = new Map(Object.entries(rolePrivileges));

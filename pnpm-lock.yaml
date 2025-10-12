@@ -29,9 +29,6 @@ importers:
       express:
         specifier: ^5.1.0
         version: 5.1.0
-      express-oauth2-jwt-bearer:
-        specifier: ^1.6.1
-        version: 1.6.1
       express-rate-limit:
         specifier: ^8.0.1
         version: 8.0.1(express@5.1.0)
@@ -1448,10 +1445,6 @@ packages:
     resolution: {integrity: sha512-JhFGDVJ7tmDJItKhYgJCGLOWjuK9vPxiXoUFLwLDc99NlmklilbiQJwoctZtt13+xMw91MCk/REan6MWHqDjyA==}
     engines: {node: '>=12.0.0'}
 
-  express-oauth2-jwt-bearer@1.6.1:
-    resolution: {integrity: sha512-fhgIvVZ6iSR/jqyVHBcN9Df7VeBdVhg5d2yN6+HNrSEegmhbh9hFY+TvtvBmsv130fI06EW3Dgp9ApmYwArN6Q==}
-    engines: {node: ^12.19.0 || ^14.15.0 || ^16.13.0 || ^18.12.0 || ^20.2.0 || ^22.1.0}
-
   express-rate-limit@8.0.1:
     resolution: {integrity: sha512-aZVCnybn7TVmxO4BtlmnvX+nuz8qHW124KKJ8dumsBsmv5ZLxE0pYu7S2nwyRBGHHCAzdmnGyrc5U/rksSPO7Q==}
     engines: {node: '>= 16'}
@@ -1785,9 +1778,6 @@ packages:
   jiti@2.4.2:
     resolution: {integrity: sha512-rg9zJN+G4n2nfJl5MW3BMygZX56zKPNVEYYqq7adpmMh4Jn2QNEwhvQlFy6jPVdcod7txZtKHWnyZiA3a0zP7A==}
     hasBin: true
-
-  jose@4.15.9:
-    resolution: {integrity: sha512-1vUQX+IdDMVPj4k8kOxgUqlcK518yluMuGZwqlr44FS1ppZB/5GWh4rZG89erpOBOJjU/OBsnCVFfapsRz6nEA==}
 
   js-tokens@4.0.0:
     resolution: {integrity: sha512-RdJUflcE3cUzKiMqQgsCu06FPu9UdIJO0beYbPhHN4k6apgJtifcoCtT9bcxOpYBtpD2kCM6Sbzg4CausW/PKQ==}
@@ -4112,10 +4102,6 @@ snapshots:
 
   expect-type@1.2.2: {}
 
-  express-oauth2-jwt-bearer@1.6.1:
-    dependencies:
-      jose: 4.15.9
-
   express-rate-limit@8.0.1(express@5.1.0):
     dependencies:
       express: 5.1.0
@@ -4475,8 +4461,6 @@ snapshots:
       '@pkgjs/parseargs': 0.11.0
 
   jiti@2.4.2: {}
-
-  jose@4.15.9: {}
 
   js-tokens@4.0.0: {}
 
