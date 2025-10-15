@@ -18,7 +18,7 @@
     "test": "sh ./scripts/run-tests.sh",
     "envup": "docker-compose up --build -d",
     "envdown": "docker-compose down",
-    "prepare": "husky"
+    "prepare": "husky || true"
   },
   "keywords": [
     "node",
@@ -70,7 +70,7 @@
     "node-mocks-http": "^1.17.2",
     "prettier": "^3.6.2",
     "prettier-plugin-prisma": "^5.0.0",
-    "prisma": "^6.14.0",
+    "prisma": "^6.17.1",
     "supertest": "^7.1.4",
     "tsx": "^4.20.3",
     "typescript": "^5.8.3",
@@ -80,7 +80,7 @@
   },
   "dependencies": {
     "@prisma/client": "6.14.0",
-    "@scalar/express-api-reference": "^0.8.13",
+    "@scalar/express-api-reference": "^0.8.21",
     "bcrypt": "^6.0.0",
     "compression": "^1.8.1",
     "cors": "^2.8.5",
