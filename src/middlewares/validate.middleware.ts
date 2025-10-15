@@ -2,7 +2,7 @@ import httpStatus from "http-status";
 import ApiError from "../utils/ApiError.js";
 import { Request, Response, NextFunction } from "express";
 import { ZodError } from "zod";
-import { RequestSchema } from "../types/request.js";
+import { RequestSchema } from "../types/request.type.js";
 
 const validate =
   (schema: RequestSchema) =>
