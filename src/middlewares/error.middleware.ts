@@ -32,6 +32,7 @@ export const errorHandler = (
     message = httpStatus[httpStatus.INTERNAL_SERVER_ERROR];
   }
 
+  // Todo check if this is needed
   res.locals.errorMessage = err.message;
 
   const response = {

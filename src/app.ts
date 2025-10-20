@@ -12,11 +12,15 @@ import {
   errorConverter,
   errorHandler
 } from "./middlewares/error.middleware.js";
+import metricsMiddleware from "./middlewares/metrics.middleware.js";
 
+// Initialize express app
 const app = express();
 
-// set security HTTP headers
-// these are default values needed for scalar docs to work correctly
+// Request logging
+if (config.env !== "test") {
+  app.use(metricsMiddleware);
+}
 
 app.use(
   helmet({
