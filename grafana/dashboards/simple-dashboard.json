@@ -161,7 +161,7 @@
           },
           "direction": "backward",
           "editorMode": "builder",
-          "expr": "{service_name=\"node-app\"} |= ``",
+          "expr": "{service_name=\"create-express-sql-app\"} |= ``",
           "queryType": "range",
           "refId": "A"
         }

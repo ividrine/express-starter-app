@@ -1,5 +1,6 @@
 import { NodeSDK } from "@opentelemetry/sdk-node";
 import { getNodeAutoInstrumentations } from "@opentelemetry/auto-instrumentations-node";
+import { PrismaInstrumentation } from "@prisma/instrumentation";
 import { OTLPTraceExporter } from "@opentelemetry/exporter-trace-otlp-http";
 import { OTLPMetricExporter } from "@opentelemetry/exporter-metrics-otlp-http";
 import { PeriodicExportingMetricReader } from "@opentelemetry/sdk-metrics";
@@ -14,24 +15,26 @@ import {
 import packageJson from "../../package.json" with { type: "json" };
 
 /**
- * This module is responsible for instrumenting the application to collect
- * and export traces, metrics, and logs in OTLP format to Alloy via HTTP.
+ * This module is responsible for instrumenting the application and
+ * its packages to collect and export telemetry data via OTLP/HTTP.
  *
- * It uses a suite of @opentelemetry packages, namely @opentelemetry/auto-instrumentations-node
- * to automatically instrument common node packages - for us that is winston, http and express.
+ * To accomplish this, it uses a suite of @opentelemetry packages for
+ * auto instrumenting packages and exporting traces, metrics, and logs.
  *
  * @see {@link https://github.com/open-telemetry/opentelemetry-js-contrib/tree/main/packages/auto-instrumentations-node}
  *
  * Log records are automatically sent to OpenTelemetry Logging SDK
- * simply by having @opentelemetry/winston-transport installed when using
- * @opentelemetry/instrumentation-winston. Which applies here since
- * we are using it via @opentelemetry/auto-instrumentations-node, so
+ * simply by having @opentelemetry/winston-transport installed, so
  * there is no need to configure a transport explicitly for winston.
  *
  * @see {@link https://github.com/open-telemetry/opentelemetry-js-contrib/tree/main/packages/winston-transport}
+ *
+ * Also added here is @prisma/instrumentation to instrument the Prisma client.
+ *
+ * @see {@link https://github.com/prisma/prisma/tree/main/packages/instrumentation}
  */
 
-const { version } = packageJson;
+const { name, version } = packageJson;
 
 if (!process.env.OTEL_COLLECTOR_URL) {
   throw new Error("OTEL_COLLECTOR_URL is not defined");
@@ -42,7 +45,7 @@ const collectorUrl = process.env.OTEL_COLLECTOR_URL;
 // Create a resource with service name and version for Node SDK
 
 const resource = resourceFromAttributes({
-  [ATTR_SERVICE_NAME]: "node-app",
+  [ATTR_SERVICE_NAME]: name,
   [ATTR_SERVICE_VERSION]: version
 });
 
@@ -81,21 +84,13 @@ const sdk = new NodeSDK({
   traceExporter,
   metricReader,
   logRecordProcessors: [logRecordProcessor],
-  instrumentations: [
-    getNodeAutoInstrumentations({
-      "@opentelemetry/instrumentation-winston": {
-        logHook: (span, record) => {
-          span.setAttribute("log.message", record.message);
-          span.setAttribute("log.level", record.level);
-        }
-      }
-    })
-  ]
+  instrumentations: [getNodeAutoInstrumentations(), new PrismaInstrumentation()]
 });
 
 sdk.start();
 
 // Graceful shutdown
+
 process.on("SIGTERM", () => {
   sdk.shutdown();
 });

@@ -1,6 +1,6 @@
 otelcol.exporter.otlphttp "loki" {
   client {
-    endpoint = "http://loki:3100/otlp" // Direct OTLP export to Loki
+    endpoint = "http://loki:3100/otlp"
   }
 }
 
