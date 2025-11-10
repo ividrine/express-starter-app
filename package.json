@@ -13,11 +13,10 @@
   "scripts": {
     "build": "rm -rf ./dist/ && prisma generate && tsc",
     "lint": "eslint",
+    "local": "sh ./scripts/run-local.sh",
     "prod": "sh ./scripts/run-prod.sh",
     "dev": "sh ./scripts/run-dev.sh",
     "test": "sh ./scripts/run-tests.sh",
-    "envup": "docker-compose up --build -d",
-    "envdown": "docker-compose down",
     "prepare": "husky || true"
   },
   "keywords": [
@@ -28,7 +27,6 @@
     "boilerplate",
     "sql",
     "postgresql",
-    "valkey",
     "prisma",
     "jest",
     "docker",
@@ -70,6 +68,7 @@
     "node-mocks-http": "^1.17.2",
     "prettier": "^3.6.2",
     "prettier-plugin-prisma": "^5.0.0",
+    "prettier-plugin-terraform-formatter": "^1.2.1",
     "prisma": "^6.17.1",
     "supertest": "^7.1.4",
     "tsx": "^4.20.3",
@@ -101,7 +100,6 @@
     "express-xss-sanitizer": "^2.0.0",
     "helmet": "^8.1.0",
     "http-status": "^2.1.0",
-    "iovalkey": "^0.3.3",
     "jsonwebtoken": "^9.0.2",
     "morgan": "^1.10.1",
     "nodemailer": "^7.0.5",

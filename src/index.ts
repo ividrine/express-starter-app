@@ -2,17 +2,16 @@ import app from "./app.js";
 import config from "./config/config.js";
 import logger from "./config/logger.js";
 import { initSql, closeSql } from "./lib/prisma/index.js";
-import { initValkey, closeValkey } from "./lib/valkey.js";
 
 (async () => {
-  await Promise.all([initSql(), initValkey()]);
+  await Promise.all([initSql()]);
 
   const server = app.listen(config.port, () => {
     logger.info(`Listening on port ${config.port}`);
   });
 
   const shutdown = async () => {
-    await Promise.allSettled([closeSql(), closeValkey()]);
+    await Promise.allSettled([closeSql()]);
     server.close();
   };
 

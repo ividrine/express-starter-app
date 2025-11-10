@@ -4,7 +4,6 @@ const envVarsSchema = z.object({
   // Required
   NODE_ENV: z.enum(["production", "development", "test"]),
   DATABASE_URL: z.string().describe("DB Url"),
-  VALKEY_URL: z.string().describe("Valkey url"),
   JWT_SECRET: z.string().describe("JWT secret key"),
   // Optional
   OTEL_COLLECTOR_URL: z.string().describe("OTEL collector url").optional(),
@@ -50,7 +49,6 @@ export default {
   env: data.NODE_ENV,
   port: data.PORT,
   db_url: data.DATABASE_URL,
-  valkey_url: data.VALKEY_URL,
   otel_collector_url: data.OTEL_COLLECTOR_URL,
   jwt: {
     issuer: data.JWT_ISSUER,

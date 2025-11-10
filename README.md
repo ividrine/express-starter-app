@@ -74,7 +74,7 @@ This project is a fork of [RESTful API Node Server Boilerplate](https://github.c
 ### Prerequisites
 
 - [Node](https://nodejs.org/en/download)
-- [Docker](https://www.docker.com/) - for local external app dependencies/tools (Postgres, Valkey, PGAdmin)
+- [Docker](https://www.docker.com/) - for local external app dependencies/tools (Postgres, PGAdmin)
 - [Git Bash](https://git-scm.com/downloads) (if on windows)
 
 ### Quick Start
@@ -197,17 +197,12 @@ PORT=3000
 # Database
 DATABASE_URL=postgresql://postgres:postgres@localhost:5432/appdb
 
-# Valkey
-VALKEY_URL=localhost:6379
-
 # JWT
 JWT_SECRET=thisisasamplesecret
 JWT_ACCESS_EXPIRATION_MINUTES=30
 JWT_REFRESH_EXPIRATION_DAYS=30
 JWT_RESET_PASSWORD_EXPIRATION_MINUTES=10
 JWT_VERIFY_EMAIL_EXPIRATION_MINUTES=10
-JWT_ISSUER=nodeapp
-JWT_AUDIENCE=nodeapp
 
 # SMTP - For testing, you can use a fake SMTP service like Ethereal: https://ethereal.email/create
 SMTP_HOST=email-server
@@ -477,8 +472,6 @@ Contributions are more than welcome! Please check out the [contributing guide](C
 [scalar-url]: https://scalar.com/
 [typescript-badge]: https://img.shields.io/badge/typescript-3178C6?style=for-the-badge&logo=typescript&logoColor=white
 [typescript-url]: https://www.typescriptlang.org/
-[valkey-badge]: https://img.shields.io/badge/valkey-DC382D?style=for-the-badge&logo=redis&logoColor=white
-[valkey-url]: https://github.com/valkey/valkey
 [vitest-badge]: https://img.shields.io/badge/vitest-6E9F18?style=for-the-badge&logo=vitest&logoColor=white
 [vitest-url]: https://vitest.dev/
 [winston-badge]: https://img.shields.io/badge/winston-231F20?style=for-the-badge
