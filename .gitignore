@@ -16,3 +16,6 @@ keys
 
 # ide
 .vscode
+
+# helm
+*.tgz

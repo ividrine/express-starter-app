@@ -21,5 +21,5 @@ RUN pnpm install --prod --frozen-lockfile && \
     rm -rf /pnpm/store
 COPY --from=build $APP_DIR/dist ./dist
 COPY --from=build $APP_DIR/node_modules/.prisma ./node_modules/.prisma
-EXPOSE 80
+EXPOSE 8080
 CMD ["pnpm", "prod"]

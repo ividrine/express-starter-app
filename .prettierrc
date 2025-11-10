@@ -3,5 +3,5 @@
   "printWidth": 80,
   "trailingComma": "none",
   "semi": true,
-  "plugins": ["prettier-plugin-prisma"]
+  "plugins": ["prettier-plugin-prisma", "prettier-plugin-terraform-formatter"]
 }
