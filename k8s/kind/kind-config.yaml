@@ -1,0 +1,16 @@
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+networking:
+  disableDefaultCNI: true
+  kubeProxyMode: "none"
+nodes:
+  - role: control-plane
+    extraPortMappings:
+      # Hubble relay
+      - containerPort: 31234
+        hostPort: 31234
+      # Hubble UI
+      - containerPort: 31235
+        hostPort: 31235
+  - role: worker
+  - role: worker

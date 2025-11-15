@@ -1,22 +1,12 @@
 #!/usr/bin/env bash
 APP_CONTAINER_NAME="express-server"
 CLUSTER_NAME="app-cluster"
-MONITORING_NS="monitoring"
-APP_NS="app"
-DB_NS="db"
 
-create_ns_if_not_exists() {
-    local ns=$1
-    if ! kubectl get namespace "$ns" -o name >/dev/null 2>&1; then
-        echo "Creating namespace: $ns"
-        kubectl create namespace "$ns"
-    else
-        echo "Namespace $ns already exists"
-    fi
-}
-
+# Install required helm repos
 helm repo add grafana https://grafana.github.io/helm-charts
 helm repo add cnpg https://cloudnative-pg.github.io/charts
+helm repo add cilium https://helm.cilium.io
+helm repo add kyverno https://kyverno.github.io/kyverno/
 helm repo update
 
 # Check if cluster exists, then create if not
@@ -24,23 +14,51 @@ if kind get clusters | grep -q "^${CLUSTER_NAME}$"; then
     echo "Cluster '${CLUSTER_NAME}' already exists. Skipping creation."
 else
     echo "Creating cluster '${CLUSTER_NAME}'..."
-    kind create cluster --name "$CLUSTER_NAME" --config ./k8s/kind/kind-cluster.yaml
+    kind create cluster --name "$CLUSTER_NAME" --config ./k8s/kind/kind-config.yaml
 fi
 
-create_ns_if_not_exists $MONITORING_NS
-create_ns_if_not_exists $APP_NS
-create_ns_if_not_exists $DB_NS
+# Create namespaces
+kubectl apply -f ./k8s/manifests/namespace.yaml
 
-docker build -t $APP_CONTAINER_NAME:latest .
+# Install Gateway API CRDs
+kubectl apply --server-side -f https://github.com/kubernetes-sigs/gateway-api/releases/download/v1.4.0/standard-install.yaml
+kubectl apply --server-side -f https://raw.githubusercontent.com/kubernetes-sigs/gateway-api/v1.4.0/config/crd/experimental/gateway.networking.k8s.io_tlsroutes.yaml
+
+# Install Cilium
+helm upgrade --install cilium cilium/cilium --version 1.19.0-pre.2 -n kube-system -f ./k8s/helm/cilium-values-local.yaml --wait
+
+# Install CNPG Operator
+helm upgrade --install cnpg cnpg/cloudnative-pg -n cnpg-system --create-namespace --wait
+
+# Install Kyverno / Copy db secrets to app namespace
+helm upgrade --install kyverno kyverno/kyverno -n kyverno --create-namespace --wait
+kubectl apply -f ./k8s/manifests/sync-secrets.yaml
+
+# Deploy database
+helm upgrade --install database-cluster cnpg/cluster -n database --wait
+
+# Build and load app image to kind
+# docker build -t $APP_CONTAINER_NAME:latest .
 kind load docker-image $APP_CONTAINER_NAME:latest --name $CLUSTER_NAME
 
-helm upgrade --install cnpg cnpg/cloudnative-pg --namespace $DB_NS
+# Deploy application
+kubectl apply -f ./k8s/manifests/deployment.yaml
+kubectl wait --for=condition=ready pod -l app=express-server -n app
 
-kubectl wait --for=condition=available deployment/cnpg-cloudnative-pg -n $DB_NS --timeout=120s
+# Deploy application service
+kubectl apply -f ./k8s/manifests/service.yaml
 
-helm upgrade --install k8s-monitoring grafana/k8s-monitoring -f ./k8s/helm/k8s-monitoring-values.yaml --namespace $MONITORING_NS 
-helm upgrade --install grafana grafana/grafana --namespace $MONITORING_NS 
-helm upgrade --install express-server ./k8s/helm/charts/express-server --namespace $APP_NS
+# Deploy networking
+kubectl apply -f ./k8s/manifests/ippool.yaml
+kubectl apply -f ./k8s/manifests/l2policy.yaml
+kubectl apply -f ./k8s/manifests/gateway.yaml
+kubectl apply -f ./k8s/manifests/httproute.yaml
+
+
+
+
+
+    
 
 
 

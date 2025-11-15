@@ -1,0 +1,23 @@
+kubeProxyReplacement: true
+k8sServiceHost: "app-cluster-control-plane"
+k8sServicePort: 6443
+gatewayAPI:
+  enabled: true
+l2announcements:
+  enabled: true
+  leaseDuration: "3s"
+  leaseRenewDeadline: "1s"
+  leaseRetryPeriod: "500ms"
+devices:
+  - eth0
+  - net0
+externalIPs:
+  enabled: true
+operator:
+  replicas: 2
+hubble:
+  enabled: true
+  relay:
+    enabled: true
+  ui:
+    enabled: true
