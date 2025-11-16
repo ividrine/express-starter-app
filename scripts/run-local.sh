@@ -41,20 +41,44 @@ helm upgrade --install database-cluster cnpg/cluster -n database --wait
 # docker build -t $APP_CONTAINER_NAME:latest .
 kind load docker-image $APP_CONTAINER_NAME:latest --name $CLUSTER_NAME
 
-# Deploy application
-kubectl apply -f ./k8s/manifests/deployment.yaml
-kubectl wait --for=condition=ready pod -l app=express-server -n app
-
-# Deploy application service
-kubectl apply -f ./k8s/manifests/service.yaml
-
 # Deploy networking
+kubectl apply -f ./k8s/manifests/gateway.yaml
 kubectl apply -f ./k8s/manifests/ippool.yaml
 kubectl apply -f ./k8s/manifests/l2policy.yaml
-kubectl apply -f ./k8s/manifests/gateway.yaml
-kubectl apply -f ./k8s/manifests/httproute.yaml
+
+# Deploy application
+kubectl apply -f ./k8s/manifests/app.yaml
 
 
+LB_IP=$(kubectl get svc -n networking cilium-gateway-cilium-gateway -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
+LB_PORT=$(kubectl get svc -n networking cilium-gateway-cilium-gateway -o jsonpath='{.spec.ports[0].port}')
+
+# Deploy proxy pod to allow access from localhost on mac/windows
+cat <<EOF | kubectl apply -f -
+apiVersion: v1
+kind: Pod
+metadata:
+  name: lb-proxy
+  namespace: default
+  labels:
+    app: lb-proxy
+spec:
+  containers:
+  - name: socat
+    image: alpine/socat
+    command: ["socat"]
+    args: ["TCP-LISTEN:8080,fork", "TCP:${LB_IP}:${LB_PORT}"]
+    securityContext:
+      capabilities:
+        add: ["NET_ADMIN"]
+EOF
+
+kubectl wait --for=condition=Ready pod/lb-proxy --timeout=60s
+
+# Port forward to socat proxy pod 
+kubectl port-forward pod/lb-proxy 8080:8080
+
+echo "Application is now available at http://localhost:8080"
 
 
 
