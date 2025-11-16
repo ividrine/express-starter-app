@@ -38,7 +38,7 @@ kubectl apply -f ./k8s/manifests/sync-secrets.yaml
 helm upgrade --install database-cluster cnpg/cluster -n database --wait
 
 # Build and load app image to kind
-# docker build -t $APP_CONTAINER_NAME:latest .
+docker build -t $APP_CONTAINER_NAME:latest .
 kind load docker-image $APP_CONTAINER_NAME:latest --name $CLUSTER_NAME
 
 # Deploy networking
