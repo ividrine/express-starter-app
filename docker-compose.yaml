@@ -1,12 +1,4 @@
 services:
-  valkey:
-    image: valkey/valkey
-    container_name: valkey-server
-    ports:
-      - "6379:6379"
-    volumes:
-      - valkey_data:/data/valkey
-
   pg:
     image: postgres:16-alpine
     container_name: pg-server
@@ -106,7 +98,6 @@ services:
       - observability
 
 volumes:
-  valkey_data:
   pg_data:
   pgadmin_data:
   grafana_data:
