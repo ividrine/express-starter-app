@@ -15,8 +15,8 @@ import {
 import packageJson from "../../package.json" with { type: "json" };
 
 /**
- * This module is responsible for instrumenting the application and
- * its packages to collect and export telemetry data via OTLP/HTTP.
+ * This file is responsible for instrumenting the application and
+ * exporting telemetry data using OTLP/HTTP.
  *
  * To accomplish this, it uses a suite of @opentelemetry packages for
  * auto instrumenting packages and exporting traces, metrics, and logs.

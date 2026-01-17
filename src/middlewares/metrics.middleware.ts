@@ -3,59 +3,49 @@ import {
   httpRequestsInFlight,
   httpRequestDuration,
   httpRequestsTotal,
-  httpErrorsTotal
+  httpRequestSizeBytes,
+  httpResponseSizeBytes
 } from "../config/metrics.js";
-import logger from "../config/logger.js";
 
-const onResponseFinished =
-  (req: Request, res: Response, start: number) => () => {
-    // Calculate / setup
-    const duration = (Date.now() - start) / 1000;
-
-    const labels = {
-      method: req.method,
-      path: req.path,
-      status: res.statusCode
-    };
-
-    const isError = res.statusCode >= 400;
-
-    // Record the duration of the request
-    httpRequestDuration.record(duration, labels);
-
-    // Increment the total counter
-    httpRequestsTotal.add(1, labels);
-
-    // Increment the error counter if the status code is >= 400
-    if (isError) {
-      httpErrorsTotal.add(1, labels);
-    }
-
-    // Decrement the in-flight counter
-    httpRequestsInFlight.add(-1, { method: req.method, path: req.path });
-
-    const logData = {
-      method: req.method,
-      path: req.path,
-      status: res.statusCode
-    };
-
-    if (isError) {
-      logger.error("Http Request Error", logData);
-    } else {
-      logger.info("Http Request", logData);
-    }
-  };
+/**
+ * Middleware for recording http request/response metrics
+ */
 
 const metricsMiddleware = (req: Request, res: Response, next: NextFunction) => {
   // Increment the in-flight counter
-  httpRequestsInFlight.add(1, { method: req.method, path: req.path });
+  httpRequestsInFlight.add(1);
 
   // Record the start time
   const start = Date.now();
 
   // Set up the finish handler
-  res.on("finish", onResponseFinished(req, res, start));
+  res.on("finish", () => {
+    const duration = (Date.now() - start) / 1000;
+    const path = req.route?.path ?? req.path;
+    const method = req.method;
+    const requestSize = parseInt(req.get("content-length") || "0", 10);
+    const responseSize = parseInt(res.get("content-length") || "0", 10);
+    const status = res.statusCode;
+
+    // Record request duration
+    httpRequestDuration.record(duration, { method, path, status });
+
+    // Increment total requests
+    httpRequestsTotal.add(1, { method, path, status });
+
+    // Record request size
+    if (requestSize > 0) {
+      httpRequestSizeBytes.record(requestSize, { method: req.method, path });
+    }
+
+    // Record response size
+    if (responseSize > 0) {
+      httpResponseSizeBytes.record(responseSize, { method: req.method, path });
+    }
+
+    // Decrement requests in flight
+    httpRequestsInFlight.add(-1);
+  });
 
   // Continue processing the request
   next();
