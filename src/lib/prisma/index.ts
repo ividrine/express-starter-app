@@ -1,7 +1,14 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from "@prisma-client";
+import { PrismaPg } from "@prisma/adapter-pg";
+import config from "../../config/config";
 import paginateExtension from "./extensions/paginate.js";
 
-const _prisma = new PrismaClient({
+const adapter = new PrismaPg({
+  connectionString: config.database_url
+});
+
+const prismaClient = new PrismaClient({
+  adapter,
   omit: {
     user: {
       password: true,
@@ -15,14 +22,14 @@ const _prisma = new PrismaClient({
   }
 });
 
-const prisma = _prisma.$extends(paginateExtension);
+const prisma = prismaClient.$extends(paginateExtension);
 
 export const initSql = async () => {
-  await _prisma.$connect();
+  await prismaClient.$connect();
 };
 
 export const closeSql = async () => {
-  await _prisma.$disconnect();
+  await prismaClient.$disconnect();
 };
 
 export default prisma;

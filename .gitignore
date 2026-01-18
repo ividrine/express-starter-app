@@ -1,7 +1,7 @@
 # Dependencies
 node_modules
 
-# Environment varibales
+# Environment variables
 .env*
 !.env*.example
 
@@ -11,8 +11,8 @@ coverage
 # Build
 dist
 
-# Secrets
-keys
-
 # ide
 .vscode
+
+# prisma client generated code
+src/lib/prisma/generated

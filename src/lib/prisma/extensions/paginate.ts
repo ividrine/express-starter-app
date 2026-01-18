@@ -1,6 +1,6 @@
 /* eslint-disable  @typescript-eslint/no-explicit-any */
 
-import { Prisma } from "@prisma/client";
+import { Prisma } from "@prisma-client";
 
 export type PaginationQuery<T> = Prisma.Args<T, "findMany">["where"];
 

@@ -48,7 +48,7 @@ const data = envVarsSchema.parse(process.env);
 export default {
   env: data.NODE_ENV,
   port: data.PORT,
-  db_url: data.DATABASE_URL,
+  database_url: data.DATABASE_URL,
   otel_collector_url: data.OTEL_COLLECTOR_URL,
   jwt: {
     issuer: data.JWT_ISSUER,

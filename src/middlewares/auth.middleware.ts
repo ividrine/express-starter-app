@@ -2,7 +2,7 @@ import httpStatus from "http-status";
 import jwt from "jsonwebtoken";
 import config from "../config/config.js";
 import ApiError from "../utils/ApiError.js";
-import { TokenType } from "@prisma/client";
+import { TokenType } from "@prisma-client";
 import { ROLE_PRIVILEGES } from "../constants/role.constants.js";
 
 import type { Request, Response, NextFunction } from "express";

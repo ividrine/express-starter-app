@@ -1,5 +1,5 @@
 import * as z from "zod";
-import { Role } from "@prisma/client";
+import { Role } from "@prisma-client";
 import { EMAIL, PASSWORD } from "../constants/validate.constants.js";
 
 const createUser = {

@@ -1,4 +1,4 @@
-import { Role, TokenType } from "@prisma/client";
+import { Role, TokenType } from "@prisma-client";
 import type { JwtPayload } from "jsonwebtoken";
 
 export type AuthPayload = JwtPayload & {

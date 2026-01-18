@@ -6,7 +6,7 @@ import {
   tokenService,
   emailService
 } from "../services/index.js";
-import { Role } from "@prisma/client";
+import { Role } from "@prisma-client";
 import ApiError from "../utils/ApiError.js";
 import { AuthRequest } from "../types/request.type.js";
 

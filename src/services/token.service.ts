@@ -5,7 +5,7 @@ import ApiError from "../utils/ApiError.js";
 import userService from "./user.service.js";
 import jwt from "jsonwebtoken";
 import prisma from "../lib/prisma/index.js";
-import { Role, TokenType } from "@prisma/client";
+import { Role, TokenType } from "@prisma-client";
 
 import type { AuthUser } from "../types/user.type.js";
 

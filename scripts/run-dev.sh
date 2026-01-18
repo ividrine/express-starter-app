@@ -12,6 +12,9 @@ docker compose up --build --wait -d
 # Migrate database
 prisma migrate dev 
 
+# Generate client
+prisma generate
+
 # Run app
 tsx watch --import ./src/config/instrumentation.ts src/index.ts
 
