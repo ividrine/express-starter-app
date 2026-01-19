@@ -5,11 +5,9 @@ import {
   DELETE_USERS
 } from "./permission.constants.js";
 
-import { Role } from "@prisma/client";
+import { Role } from "@prisma-client";
 
-const rolePrivileges = {
+export const ROLE_PRIVILEGES: Record<Role, string[]> = {
   [Role.USER]: [],
   [Role.ADMIN]: [CREATE_USERS, READ_USERS, UPDATE_USERS, DELETE_USERS]
 };
-
-export const ROLE_PRIVILEGES = new Map(Object.entries(rolePrivileges));

@@ -1,4 +1,4 @@
-import { User } from "@prisma/client";
+import { User } from "@prisma-client";
 
 export type InsertableUser = Pick<User, "email" | "password" | "role">;
 export type SelectableUser = Omit<User, "password">;

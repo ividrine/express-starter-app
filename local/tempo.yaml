@@ -1,0 +1,33 @@
+server:
+  http_listen_port: 3200
+
+target: all
+
+distributor:
+  receivers:
+    otlp:
+      protocols:
+        http:
+          endpoint: 0.0.0.0:3201
+
+ingester:
+  lifecycler:
+    ring:
+      kvstore:
+        store: inmemory # Use in-memory store for single-binary mode
+      replication_factor: 1
+
+metrics_generator:
+  storage:
+    path: /tmp/tempo/metrics
+  ring:
+    kvstore:
+      store: inmemory
+
+storage:
+  trace:
+    backend: local
+    local:
+      path: /tmp/tempo/blocks
+    wal:
+      path: /tmp/tempo/wal

@@ -6,9 +6,9 @@ import {
   tokenService,
   emailService
 } from "../services/index.js";
-import { Role } from "@prisma/client";
-import { JWTPayload } from "express-oauth2-jwt-bearer";
+import { Role } from "@prisma-client";
 import ApiError from "../utils/ApiError.js";
+import { AuthRequest } from "../types/request.type.js";
 
 const register = catchAsync(async (req, res) => {
   const { body } = res.locals.input;
@@ -52,7 +52,7 @@ const resetPassword = catchAsync(async (req, res) => {
 });
 
 const sendVerificationEmail = catchAsync(async (req, res) => {
-  const { sub, role } = req.auth?.payload as JWTPayload;
+  const { sub, role } = (req as AuthRequest).auth?.payload;
   const user = await userService.getUserById(sub as string);
 
   if (!user) {

@@ -1,9 +1,8 @@
 /* eslint-disable no-console */
-import { PrismaClient, Role } from "@prisma/client";
+import prisma from "../src/lib/prisma/index";
+import { Role } from "../src/lib/prisma/generated/client";
 import { faker } from "@faker-js/faker";
 import bcrypt from "bcrypt";
-
-const prisma = new PrismaClient();
 
 async function main() {
   const totalUsers = 100;

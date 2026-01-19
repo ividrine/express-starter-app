@@ -4,10 +4,9 @@ const envVarsSchema = z.object({
   // Required
   NODE_ENV: z.enum(["production", "development", "test"]),
   DATABASE_URL: z.string().describe("DB Url"),
-  VALKEY_URL: z.string().describe("Valkey url"),
   JWT_SECRET: z.string().describe("JWT secret key"),
-
   // Optional
+  OTEL_COLLECTOR_URL: z.string().describe("OTEL collector url").optional(),
   PORT: z.coerce.number().default(3000).optional(),
   JWT_ISSUER: z.string().default("nodeapp").describe("JWT issuer").optional(),
   JWT_AUDIENCE: z.string().default("nodeapp").describe("JWT issuer").optional(),
@@ -49,8 +48,8 @@ const data = envVarsSchema.parse(process.env);
 export default {
   env: data.NODE_ENV,
   port: data.PORT,
-  db_url: data.DATABASE_URL,
-  valkey_url: data.VALKEY_URL,
+  database_url: data.DATABASE_URL,
+  otel_collector_url: data.OTEL_COLLECTOR_URL,
   jwt: {
     issuer: data.JWT_ISSUER,
     audience: data.JWT_AUDIENCE,

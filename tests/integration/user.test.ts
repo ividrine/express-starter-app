@@ -8,12 +8,13 @@ import {
   adminAccessToken
 } from "../fixtures/token.fixture";
 import { describe, test, expect, beforeEach } from "vitest";
-import { Role } from "@prisma/client";
+import { Role } from "../../src/lib/prisma/generated/client";
 import prisma from "../../src/lib/prisma";
+import { SelectableUser } from "../../src/types/user.type";
 
 describe("User routes", async () => {
   describe("POST /v1/users", async () => {
-    let newUser;
+    let newUser: SelectableUser;
 
     beforeEach(() => {
       newUser = {

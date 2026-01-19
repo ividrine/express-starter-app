@@ -2,7 +2,7 @@ import httpStatus from "http-status";
 import catchAsync from "../utils/catchAsync.js";
 import ApiError from "../utils/ApiError.js";
 import userService from "../services/user.service.js";
-import { User } from "@prisma/client";
+import { User } from "@prisma-client";
 import type { PaginationArgs } from "../lib/prisma/extensions/paginate.js";
 
 const createUser = catchAsync(async (req, res) => {

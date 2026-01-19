@@ -1,0 +1,22 @@
+multitenancy_enabled: false
+
+server:
+  http_listen_port: 9009
+
+distributor:
+  ring:
+    instance_addr: 127.0.0.1
+    kvstore:
+      store: memberlist
+
+ingester:
+  ring:
+    instance_addr: 127.0.0.1
+    kvstore:
+      store: memberlist
+    replication_factor: 1
+
+blocks_storage:
+  backend: filesystem
+  filesystem:
+    dir: /data/mimir

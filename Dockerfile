@@ -1,15 +1,24 @@
+# Stage 1: Base Environment
 FROM node:22-slim AS base
 ENV PNPM_HOME="/pnpm"
 ENV PATH="$PNPM_HOME:$PATH"
+ENV APP_DIR=/usr/local/app
 RUN corepack enable
-RUN mkdir -p /usr/app && chown -R node:node /usr/app
-WORKDIR /usr/app
-COPY package.json pnpm-lock.yaml ./
 
-FROM base AS deps
-RUN --mount=type=cache,id=pnpm,target=/pnpm/store pnpm install --frozen-lockfile
+# Stage 2: Install all dependencies, generate prisma client and dist folder
+FROM base AS build
+WORKDIR $APP_DIR
+COPY . .
+RUN pnpm install --frozen-lockfile
+RUN pnpm build
 
+# Stage 3: Final
 FROM base
-COPY --from=deps /usr/app/node_modules /usr/app/node_modules
-COPY --chown=node:node . .
+WORKDIR $APP_DIR
+COPY package.json pnpm-lock.yaml ./
+COPY scripts/run-prod.sh ./scripts/
+RUN pnpm install --prod --frozen-lockfile && \
+    rm -rf /pnpm/store
+COPY --from=build $APP_DIR/dist ./dist
 EXPOSE 3000
+CMD ["pnpm", "prod"]

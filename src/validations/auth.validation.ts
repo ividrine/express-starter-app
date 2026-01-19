@@ -1,78 +1,39 @@
 import * as z from "zod";
-import {
-  PW_LENGTH,
-  PW_PATTERN,
-  PW_REQUIRED,
-  INVALID_EMAIL,
-  EMAIL_REQUIRED,
-  INVALID_TOKEN
-} from "../constants/validate.constants.js";
+import { EMAIL, PASSWORD, TOKEN } from "../constants/validate.constants.js";
 
 const register = {
   body: z.object({
-    email: z.email({
-      error: (iss) => (iss.input === undefined ? EMAIL_REQUIRED : INVALID_EMAIL)
-    }),
-    password: z
-      .string(PW_REQUIRED)
-      .min(8, PW_LENGTH)
-      .refine(
-        (password) => password.match(/\d/) && password.match(/[a-zA-Z]/),
-        {
-          message: PW_PATTERN
-        }
-      )
+    email: EMAIL,
+    password: PASSWORD
   })
 };
 
 const login = {
   body: z.object({
-    email: z.email({
-      error: (iss) => (iss.input === undefined ? EMAIL_REQUIRED : INVALID_EMAIL)
-    }),
-    password: z.string(PW_REQUIRED)
+    email: EMAIL,
+    password: PASSWORD
   })
 };
 
 const logout = {
-  body: z.object({
-    refreshToken: z.string(INVALID_TOKEN).min(1, INVALID_TOKEN)
-  })
+  body: z.object({ refreshToken: TOKEN })
 };
 
 const refreshTokens = {
-  body: z.object({
-    refreshToken: z.string(INVALID_TOKEN).min(1, INVALID_TOKEN)
-  })
+  body: z.object({ refreshToken: TOKEN })
 };
 
 const forgotPassword = {
-  body: z.object({
-    email: z.email({
-      error: (iss) => (iss.input === undefined ? EMAIL_REQUIRED : INVALID_EMAIL)
-    })
-  })
+  body: z.object({ email: EMAIL })
 };
 
 const resetPassword = {
-  query: z.object({
-    token: z.string(INVALID_TOKEN).min(1, INVALID_TOKEN)
-  }),
-  body: z.object({
-    password: z
-      .string(PW_REQUIRED)
-      .min(8, PW_LENGTH)
-      .refine(
-        (password) => password.match(/\d/) && password.match(/[a-zA-Z]/),
-        { message: PW_PATTERN }
-      )
-  })
+  query: z.object({ token: TOKEN }),
+  body: z.object({ password: PASSWORD })
 };
 
 const verifyEmail = {
-  query: z.object({
-    token: z.string(INVALID_TOKEN).min(1, INVALID_TOKEN)
-  })
+  query: z.object({ token: TOKEN })
 };
 
 export default {

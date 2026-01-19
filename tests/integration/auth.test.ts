@@ -8,7 +8,8 @@ import { faker } from "@faker-js/faker";
 import dayjs from "dayjs";
 import authorize from "../../src/middlewares/auth.middleware";
 import { emailService, tokenService } from "../../src/services";
-import { Role, TokenType } from "@prisma/client";
+import { Role, TokenType } from "../../src/lib/prisma/generated/client";
+import prisma from "../../src/lib/prisma";
 import { userOne, insertUsers } from "../fixtures/user.fixture";
 import { ROLE_PRIVILEGES } from "../../src/constants/role.constants";
 import {
@@ -17,12 +18,12 @@ import {
 } from "../fixtures/token.fixture";
 import { SentMessageInfo } from "nodemailer";
 import ApiError from "../../src/utils/ApiError";
-import prisma from "../../src/lib/prisma";
 import bcrypt from "bcrypt";
+import { SelectableUser } from "../../src/types/user.type";
 
 describe("Auth routes", async () => {
   describe("POST /v1/auth/register", async () => {
-    let newUser;
+    let newUser: SelectableUser;
     beforeEach(() => {
       newUser = {
         email: faker.internet.email().toLowerCase(),
@@ -177,7 +178,10 @@ describe("Auth routes", async () => {
     test("should return 204 if refresh token is valid", async () => {
       await insertUsers([userOne]);
 
-      const expires = dayjs().add(config.jwt.refreshExpirationDays, "days");
+      const expires = dayjs().add(
+        config.jwt.refreshExpirationDays as number,
+        "days"
+      );
 
       const refreshToken = tokenService.generateToken(
         userOne.id,
@@ -215,7 +219,10 @@ describe("Auth routes", async () => {
     test("should return 404 error if refresh token is not found in the database", async () => {
       await insertUsers([userOne]);
 
-      const expires = dayjs().add(config.jwt.refreshExpirationDays, "days");
+      const expires = dayjs().add(
+        config.jwt.refreshExpirationDays as number,
+        "days"
+      );
 
       const refreshToken = tokenService.generateToken(
         userOne.id,
@@ -233,7 +240,10 @@ describe("Auth routes", async () => {
     test("should return 404 error if refresh token is revoked", async () => {
       await insertUsers([userOne]);
 
-      const expires = dayjs().add(config.jwt.refreshExpirationDays, "days");
+      const expires = dayjs().add(
+        config.jwt.refreshExpirationDays as number,
+        "days"
+      );
 
       const refreshToken = tokenService.generateToken(
         userOne.id,
@@ -261,7 +271,10 @@ describe("Auth routes", async () => {
     test("should return 200 and new auth tokens if refresh token is valid", async () => {
       await insertUsers([userOne]);
 
-      const expires = dayjs().add(config.jwt.refreshExpirationDays, "days");
+      const expires = dayjs().add(
+        config.jwt.refreshExpirationDays as number,
+        "days"
+      );
 
       const refreshToken = tokenService.generateToken(
         userOne.id,
@@ -312,7 +325,10 @@ describe("Auth routes", async () => {
     test("should return 401 error if refresh token is signed using an invalid secret", async () => {
       await insertUsers([userOne]);
 
-      const expires = dayjs().add(config.jwt.refreshExpirationDays, "days");
+      const expires = dayjs().add(
+        config.jwt.refreshExpirationDays as number,
+        "days"
+      );
 
       const refreshToken = tokenService.generateToken(
         userOne.id,
@@ -338,7 +354,10 @@ describe("Auth routes", async () => {
     test("should return 401 error if refresh token is not found in the database", async () => {
       await insertUsers([userOne]);
 
-      const expires = dayjs().add(config.jwt.refreshExpirationDays, "days");
+      const expires = dayjs().add(
+        config.jwt.refreshExpirationDays as number,
+        "days"
+      );
 
       const refreshToken = tokenService.generateToken(
         userOne.id,
@@ -356,7 +375,10 @@ describe("Auth routes", async () => {
     test("should return 401 error if refresh token is revoked", async () => {
       await insertUsers([userOne]);
 
-      const expires = dayjs().add(config.jwt.refreshExpirationDays, "days");
+      const expires = dayjs().add(
+        config.jwt.refreshExpirationDays as number,
+        "days"
+      );
 
       const refreshToken = tokenService.generateToken(
         userOne.id,
@@ -460,7 +482,7 @@ describe("Auth routes", async () => {
       await insertUsers([userOne]);
 
       const expires = dayjs().add(
-        config.jwt.resetPasswordExpirationMinutes,
+        config.jwt.resetPasswordExpirationMinutes as number,
         "minutes"
       );
 
@@ -516,7 +538,7 @@ describe("Auth routes", async () => {
     test("should return 401 if reset password token is revoked", async () => {
       await insertUsers([userOne]);
       const expires = dayjs().add(
-        config.jwt.resetPasswordExpirationMinutes,
+        config.jwt.resetPasswordExpirationMinutes as number,
         "minutes"
       );
       const resetPasswordToken = tokenService.generateToken(
@@ -570,7 +592,7 @@ describe("Auth routes", async () => {
     test("should return 400 if password is missing or invalid", async () => {
       await insertUsers([userOne]);
       const expires = dayjs().add(
-        config.jwt.resetPasswordExpirationMinutes,
+        config.jwt.resetPasswordExpirationMinutes as number,
         "minutes"
       );
       const resetPasswordToken = tokenService.generateToken(
@@ -659,7 +681,7 @@ describe("Auth routes", async () => {
     test("should return 204 and verify the email", async () => {
       await insertUsers([userOne]);
       const expires = dayjs().add(
-        config.jwt.verifyEmailExpirationMinutes,
+        config.jwt.verifyEmailExpirationMinutes as number,
         "minutes"
       );
       const verifyEmailToken = tokenService.generateToken(
@@ -707,7 +729,7 @@ describe("Auth routes", async () => {
       await insertUsers([userOne]);
 
       const expires = dayjs().add(
-        config.jwt.verifyEmailExpirationMinutes,
+        config.jwt.verifyEmailExpirationMinutes as number,
         "days"
       );
 
@@ -808,7 +830,10 @@ describe("Auth middleware", () => {
   });
 
   test("should call next with unauthorized error if the token is not an access token", async () => {
-    const expires = dayjs().add(config.jwt.accessExpirationMinutes, "minutes");
+    const expires = dayjs().add(
+      config.jwt.accessExpirationMinutes as number,
+      "minutes"
+    );
     const refreshToken = tokenService.generateToken(
       userOne.id,
       userOne.role,
@@ -832,7 +857,10 @@ describe("Auth middleware", () => {
   });
 
   test("should call next with unauthorized error if access token is generated with an invalid secret", async () => {
-    const expires = dayjs().add(config.jwt.accessExpirationMinutes, "minutes");
+    const expires = dayjs().add(
+      config.jwt.accessExpirationMinutes as number,
+      "minutes"
+    );
     const accessToken = tokenService.generateToken(
       userOne.id,
       userOne.role,
@@ -917,7 +945,7 @@ describe("Auth middleware", () => {
     });
     const next = vi.fn();
 
-    await authorize(...(ROLE_PRIVILEGES.get(Role.ADMIN) as string[]))(
+    await authorize(...ROLE_PRIVILEGES[Role.ADMIN])(
       req,
       httpMocks.createResponse(),
       next

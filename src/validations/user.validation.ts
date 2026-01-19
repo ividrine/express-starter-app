@@ -1,27 +1,11 @@
 import * as z from "zod";
-import { Role } from "@prisma/client";
-import {
-  PW_LENGTH,
-  PW_PATTERN,
-  EMAIL_REQUIRED,
-  INVALID_EMAIL,
-  PW_REQUIRED
-} from "../constants/validate.constants.js";
+import { Role } from "@prisma-client";
+import { EMAIL, PASSWORD } from "../constants/validate.constants.js";
 
 const createUser = {
   body: z.object({
-    email: z.email({
-      error: (iss) => (iss.input === undefined ? EMAIL_REQUIRED : INVALID_EMAIL)
-    }),
-    password: z
-      .string(PW_REQUIRED)
-      .min(8, PW_LENGTH)
-      .refine(
-        (password) => password.match(/\d/) && password.match(/[a-zA-Z]/),
-        {
-          message: PW_PATTERN
-        }
-      ),
+    email: EMAIL,
+    password: PASSWORD,
     role: z.enum(Role)
   })
 };
@@ -46,17 +30,8 @@ const getUser = {
 const updateUser = {
   params: z.object({ userId: z.string() }),
   body: z.object({
-    email: z.email().optional(),
-    password: z
-      .string()
-      .min(8, PW_LENGTH)
-      .refine(
-        (password) => password.match(/\d/) && password.match(/[a-zA-Z]/),
-        {
-          message: PW_PATTERN
-        }
-      )
-      .optional()
+    email: EMAIL.optional(),
+    password: PASSWORD.optional()
   })
 };
 

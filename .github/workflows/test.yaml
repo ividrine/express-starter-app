@@ -1,23 +1,13 @@
-name: Run Integration Tests
+name: test
 
 on:
   pull_request:
-    branches: [main]
+    branches: [main, development]
 
 jobs:
   test:
     runs-on: ubuntu-latest
     services:
-      valkey:
-        image: valkey/valkey
-        options: >-
-          --health-cmd "redis-cli ping"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-        ports:
-          - 6379:6379
-
       database:
         image: postgres:latest
         env:
@@ -49,4 +39,11 @@ jobs:
         run: pnpm install
 
       - name: Run tests
-        run: pnpm test ci
+        run: pnpm test ci --coverage
+
+      - name: Upload coverage artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-report
+          path: coverage/
+          retention-days: 1

@@ -1,10 +1,12 @@
-import type { PrismaConfig } from "prisma";
-import path from "path";
+import { defineConfig, env } from "prisma/config";
 
-export default {
-  schema: path.join("db", "schema.prisma"),
+export default defineConfig({
+  schema: "prisma/schema.prisma",
   migrations: {
-    path: path.join("db", "migrations"),
-    seed: "tsx db/seed.ts"
+    path: "prisma/migrations",
+    seed: "tsx prisma/seed.ts"
+  },
+  datasource: {
+    url: env("DATABASE_URL")
   }
-} satisfies PrismaConfig;
+});

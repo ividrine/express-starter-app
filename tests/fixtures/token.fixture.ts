@@ -1,11 +1,11 @@
 import dayjs from "dayjs";
-import { TokenType } from "@prisma/client";
+import { TokenType } from "../../src/lib/prisma/generated/client";
 import tokenService from "../../src/services/token.service";
 import { userOne, admin } from "./user.fixture";
 import config from "../../src/config/config";
 
 const accessTokenExpires = dayjs().add(
-  config.jwt.accessExpirationMinutes,
+  config.jwt.accessExpirationMinutes as number,
   "minutes"
 );
 

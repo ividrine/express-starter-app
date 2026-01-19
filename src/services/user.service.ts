@@ -1,10 +1,11 @@
 import httpStatus from "http-status";
-import ApiError from "../utils/ApiError.js";
+import ApiError from "../utils/ApiError";
 import bcrypt from "bcrypt";
-import { User } from "@prisma/client";
-import prisma from "../lib/prisma/index.js";
-import type { PaginationArgs } from "../lib/prisma/extensions/paginate.js";
-import { InsertableUser, SelectableUser } from "../types/user.js";
+import { User } from "@prisma-client";
+import prisma from "@prisma-instance";
+import type { PaginationArgs } from "../lib/prisma/extensions/paginate";
+import { InsertableUser, SelectableUser } from "../types/user.type";
+import { userRegistrationsTotal } from "../config/metrics";
 
 const salt = 10;
 
@@ -14,7 +15,9 @@ const createUser = async (userBody: InsertableUser) => {
 
   const password = await bcrypt.hash(userBody.password, salt);
 
-  return await prisma.user.create({ data: { ...userBody, password } });
+  const user = await prisma.user.create({ data: { ...userBody, password } });
+  userRegistrationsTotal.add(1);
+  return user;
 };
 
 const queryUsers = async (args: PaginationArgs<SelectableUser>) =>
