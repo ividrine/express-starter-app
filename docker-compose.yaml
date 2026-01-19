@@ -36,7 +36,7 @@ services:
       - --storage.path=/var/lib/alloy/data
       - /etc/alloy/config.alloy
     volumes:
-      - ./config.alloy:/etc/alloy/config.alloy
+      - ./local/config.alloy:/etc/alloy/config.alloy
       - alloy_data:/var/lib/alloy/data
     ports:
       - "4318:4318" # OTLP HTTP
@@ -53,7 +53,7 @@ services:
     command: ["-config.file=/etc/tempo.yaml"]
     user: "0:0"
     volumes:
-      - ./tempo.yaml:/etc/tempo.yaml
+      - ./local/tempo.yaml:/etc/tempo.yaml
       - tempo-data:/tmp/tempo
     ports:
       - "3200:3200" # Tempo query API
@@ -65,7 +65,7 @@ services:
     image: grafana/loki:latest
     command: ["-config.file=/etc/loki/loki.yaml"]
     volumes:
-      - ./loki.yaml:/etc/loki/loki.yaml
+      - ./local/loki.yaml:/etc/loki/loki.yaml
       - loki-data:/loki
     ports:
       - "3100:3100" # Loki API
@@ -76,7 +76,7 @@ services:
     image: grafana/mimir:latest
     command: ["-config.file=/etc/mimir/mimir.yaml"]
     volumes:
-      - ./mimir.yaml:/etc/mimir/mimir.yaml
+      - ./local/mimir.yaml:/etc/mimir/mimir.yaml
     ports:
       - "9009:9009" # Mimir API
     networks:
@@ -90,8 +90,7 @@ services:
       - GF_AUTH_ANONYMOUS_ENABLED=true
       - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
     volumes:
-      - ./grafana/datasources:/etc/grafana/provisioning/datasources
-      - ./grafana/dashboards:/etc/grafana/provisioning/dashboards
+      - ./local/grafana/datasources:/etc/grafana/provisioning/datasources
     depends_on:
       - alloy
     networks:

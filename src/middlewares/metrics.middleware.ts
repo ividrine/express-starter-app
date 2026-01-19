@@ -5,7 +5,7 @@ import {
   httpRequestsTotal,
   httpRequestSizeBytes,
   httpResponseSizeBytes
-} from "../config/metrics.js";
+} from "../config/metrics";
 
 /**
  * Middleware for recording http request/response metrics
