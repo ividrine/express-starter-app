@@ -1,6 +1,17 @@
 import { defineConfig } from "vitest/config";
+import path from "path";
 
 export default defineConfig({
+  resolve: {
+    alias: {
+      "@prisma-client": path.resolve(
+        __dirname,
+        "./src/lib/prisma/generated/client"
+      ),
+      "@prisma-instance": path.resolve(__dirname, "./src/lib/prisma"),
+      "@": path.resolve(__dirname, "./src")
+    }
+  },
   test: {
     include: ["tests/**/*.test.ts"],
     setupFiles: ["./tests/util/setup.ts"],

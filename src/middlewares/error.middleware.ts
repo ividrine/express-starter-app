@@ -41,7 +41,7 @@ export const errorHandler = (
     ...(config.env === "development" && { stack: err.stack })
   };
 
-  if (config.env === "development") {
+  if (config.env != "test") {
     logger.error(err);
   }
 

@@ -3,12 +3,12 @@ import httpMocks from "node-mocks-http";
 import {
   errorConverter,
   errorHandler
-} from "../../../src/middlewares/error.middleware.ts";
-import ApiError from "../../../src/utils/ApiError.ts";
+} from "../../../src/middlewares/error.middleware";
+import ApiError from "../../../src/utils/ApiError";
 import { describe, test, expect, vi, beforeEach } from "vitest";
-import logger from "../../../src/config/logger.ts";
-import config from "../../../src/config/config.ts";
-import type { NodeEnv } from "../../../src/types/env.type.ts";
+import logger from "../../../src/config/logger";
+import config from "../../../src/config/config";
+import type { NodeEnv } from "../../../src/types/env.type";
 
 describe("Error middlewares", () => {
   describe("Error converter", () => {

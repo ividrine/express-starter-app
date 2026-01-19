@@ -14,6 +14,8 @@ export NODE_ENV=test;
 export DATABASE_URL=postgresql://postgres:postgres@localhost:5432/testdb;
 export JWT_SECRET=thisisasamplesecret;
 
-prisma migrate reset --force --skip-seed;
+prisma migrate reset --force;
+
+prisma generate;
 
 vitest $@

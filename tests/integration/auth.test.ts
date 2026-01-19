@@ -8,7 +8,8 @@ import { faker } from "@faker-js/faker";
 import dayjs from "dayjs";
 import authorize from "../../src/middlewares/auth.middleware";
 import { emailService, tokenService } from "../../src/services";
-import { Role, TokenType } from "@prisma/client";
+import { Role, TokenType } from "../../src/lib/prisma/generated/client";
+import prisma from "../../src/lib/prisma";
 import { userOne, insertUsers } from "../fixtures/user.fixture";
 import { ROLE_PRIVILEGES } from "../../src/constants/role.constants";
 import {
@@ -17,12 +18,12 @@ import {
 } from "../fixtures/token.fixture";
 import { SentMessageInfo } from "nodemailer";
 import ApiError from "../../src/utils/ApiError";
-import prisma from "../../src/lib/prisma";
 import bcrypt from "bcrypt";
+import { SelectableUser } from "../../src/types/user.type";
 
 describe("Auth routes", async () => {
   describe("POST /v1/auth/register", async () => {
-    let newUser;
+    let newUser: SelectableUser;
     beforeEach(() => {
       newUser = {
         email: faker.internet.email().toLowerCase(),
