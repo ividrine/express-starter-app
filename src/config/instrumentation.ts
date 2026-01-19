@@ -12,6 +12,9 @@ import {
   ATTR_SERVICE_VERSION
 } from "@opentelemetry/semantic-conventions";
 
+import config from "./config";
+import logger from "./logger";
+
 import packageJson from "../../package.json" with { type: "json" };
 
 /**
@@ -36,61 +39,62 @@ import packageJson from "../../package.json" with { type: "json" };
 
 const { name, version } = packageJson;
 
-if (!process.env.OTEL_COLLECTOR_URL) {
-  throw new Error("OTEL_COLLECTOR_URL is not defined");
+const addInstrumentation = () => {
+  // Create a resource with service name and version for Node SDK
+  const resource = resourceFromAttributes({
+    [ATTR_SERVICE_NAME]: name,
+    [ATTR_SERVICE_VERSION]: version
+  });
+
+  // Define OTLP exporters
+  const traceExporter = new OTLPTraceExporter({
+    url: `${config.otel_collector_url}/v1/traces`,
+    headers: {}
+  });
+
+  const metricExporter = new OTLPMetricExporter({
+    url: `${config.otel_collector_url}/v1/metrics`,
+    headers: {}
+  });
+
+  const logsExporter = new OTLPLogExporter({
+    url: `${config.otel_collector_url}/v1/logs`,
+    headers: {}
+  });
+
+  // Define metric reader
+  const metricReader = new PeriodicExportingMetricReader({
+    exporter: metricExporter,
+    exportIntervalMillis: 10000 // Export metrics every 10s
+  });
+
+  // Define log record processor
+  const logRecordProcessor = new SimpleLogRecordProcessor(logsExporter);
+
+  // Initialize Node SDK
+  const sdk = new NodeSDK({
+    resource,
+    traceExporter,
+    metricReader,
+    logRecordProcessors: [logRecordProcessor],
+    instrumentations: [
+      getNodeAutoInstrumentations(),
+      new PrismaInstrumentation()
+    ]
+  });
+
+  sdk.start();
+
+  // Graceful shutdown
+  process.on("SIGTERM", () => {
+    sdk.shutdown();
+  });
+};
+
+if (!config.otel_collector_url) {
+  logger.warn(
+    "OTEL_COLLECTOR_URL is not defined. Telemetry data will not be collected."
+  );
+} else {
+  addInstrumentation();
 }
-
-const collectorUrl = process.env.OTEL_COLLECTOR_URL;
-
-// Create a resource with service name and version for Node SDK
-
-const resource = resourceFromAttributes({
-  [ATTR_SERVICE_NAME]: name,
-  [ATTR_SERVICE_VERSION]: version
-});
-
-// Define otel exporters
-
-const traceExporter = new OTLPTraceExporter({
-  url: `${collectorUrl}/v1/traces`,
-  headers: {}
-});
-
-const metricExporter = new OTLPMetricExporter({
-  url: `${collectorUrl}/v1/metrics`,
-  headers: {}
-});
-
-const logsExporter = new OTLPLogExporter({
-  url: `${collectorUrl}/v1/logs`,
-  headers: {}
-});
-
-// Define metric reader
-
-const metricReader = new PeriodicExportingMetricReader({
-  exporter: metricExporter,
-  exportIntervalMillis: 10000 // Export metrics every 10s
-});
-
-// Define log record processor
-
-const logRecordProcessor = new SimpleLogRecordProcessor(logsExporter);
-
-// Initialize Node SDK
-
-const sdk = new NodeSDK({
-  resource,
-  traceExporter,
-  metricReader,
-  logRecordProcessors: [logRecordProcessor],
-  instrumentations: [getNodeAutoInstrumentations(), new PrismaInstrumentation()]
-});
-
-sdk.start();
-
-// Graceful shutdown
-
-process.on("SIGTERM", () => {
-  sdk.shutdown();
-});
