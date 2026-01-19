@@ -4,9 +4,14 @@
   "description": "Cloud native, production ready starter application for building RESTful APIs using Express and PostgreSQL",
   "type": "module",
   "main": "dist/index.js",
-  "bin": "bin/createApp.js",
+  "bin": {
+    "create-express-app": "bin/createApp.js"
+  },
   "homepage": "https://github.com/ividrine/express-starter-app",
-  "repository": "https://github.com/ividrine/express-starter-app.git",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ividrine/express-starter-app.git"
+  },
   "engines": {
     "node": ">=22.0.0"
   },
