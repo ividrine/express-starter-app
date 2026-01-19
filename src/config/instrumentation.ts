@@ -48,18 +48,15 @@ const addInstrumentation = () => {
 
   // Define OTLP exporters
   const traceExporter = new OTLPTraceExporter({
-    url: `${config.otel_collector_url}/v1/traces`,
-    headers: {}
+    url: `${config.otel_collector_url}/v1/traces`
   });
 
   const metricExporter = new OTLPMetricExporter({
-    url: `${config.otel_collector_url}/v1/metrics`,
-    headers: {}
+    url: `${config.otel_collector_url}/v1/metrics`
   });
 
   const logsExporter = new OTLPLogExporter({
-    url: `${config.otel_collector_url}/v1/logs`,
-    headers: {}
+    url: `${config.otel_collector_url}/v1/logs`
   });
 
   // Define metric reader
