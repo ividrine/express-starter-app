@@ -5,7 +5,7 @@ import httpStatus from "http-status";
 import compression from "compression";
 import routes from "./routes/v1/index.js";
 import { xss } from "express-xss-sanitizer";
-import { authLimiter } from "./middlewares/rateLimiter.middleware.js";
+import { rateLimiter } from "./middlewares/rateLimiter.middleware.js";
 import ApiError from "./utils/ApiError.js";
 import cors from "cors";
 import {
@@ -69,9 +69,9 @@ app.use(compression());
 // enable cors
 app.use(cors());
 
-// limit repeated failed requests to auth endpoints
+// global rate limit
 if (config.env === "production") {
-  app.use("/v1/auth", authLimiter);
+  app.use(rateLimiter);
 }
 
 // v1 api routes

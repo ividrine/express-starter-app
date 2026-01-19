@@ -1,11 +1,33 @@
-import rateLimit from "express-rate-limit";
+import { Request, Response, NextFunction } from "express";
+import { RateLimiterPrisma, RateLimiterRes } from "rate-limiter-flexible";
+import httpStatus from "http-status";
+import prisma from "@prisma-instance";
+import ApiError from "@/utils/ApiError";
 
-export const authLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  limit: 100, // Limit each IP to 100 requests per `window` (here, per 15 minutes).
-  standardHeaders: "draft-8", // draft-6: `RateLimit-*` headers; draft-7 & draft-8: combined `RateLimit` header
-  legacyHeaders: false, // Disable the `X-RateLimit-*` headers.
-  ipv6Subnet: 56, // Set to 60 or 64 to be less aggressive, or 52 or 48 to be more aggressive
-  skipSuccessfulRequests: true
-  // store: ... , // Redis, Memcached, etc. See below.
+const rateLimiterPrisma = new RateLimiterPrisma({
+  storeClient: prisma,
+  keyPrefix: "middleware",
+  points: 10, // 50 requests
+  duration: 1 // per 5 seconds by IP
 });
+
+export async function rateLimiter(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) {
+  try {
+    await rateLimiterPrisma.consume(req.ip as string);
+    next();
+  } catch (err) {
+    if (err instanceof RateLimiterRes) {
+      const secs = Math.round(err.msBeforeNext / 1000) || 1;
+      res.set("Retry-After", String(secs));
+      return next(
+        new ApiError(httpStatus.TOO_MANY_REQUESTS, "Too Many Requests")
+      );
+    } else {
+      next(err);
+    }
+  }
+}

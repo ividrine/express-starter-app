@@ -1,16 +1,16 @@
 -- CreateEnum
-CREATE TYPE "public"."Role" AS ENUM ('ADMIN', 'USER');
+CREATE TYPE "Role" AS ENUM ('ADMIN', 'USER');
 
 -- CreateEnum
-CREATE TYPE "public"."TokenType" AS ENUM ('ACCESS', 'REFRESH', 'RESET_PASSWORD', 'VERIFY_EMAIL');
+CREATE TYPE "TokenType" AS ENUM ('ACCESS', 'REFRESH', 'RESET_PASSWORD', 'VERIFY_EMAIL');
 
 -- CreateTable
-CREATE TABLE "public"."User" (
+CREATE TABLE "User" (
     "id" TEXT NOT NULL,
     "email" TEXT NOT NULL,
     "password" TEXT NOT NULL,
     "isEmailVerified" BOOLEAN NOT NULL DEFAULT false,
-    "role" "public"."Role" NOT NULL DEFAULT 'USER',
+    "role" "Role" NOT NULL DEFAULT 'USER',
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
@@ -18,7 +18,7 @@ CREATE TABLE "public"."User" (
 );
 
 -- CreateTable
-CREATE TABLE "public"."Token" (
+CREATE TABLE "Token" (
     "id" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
     "token" TEXT NOT NULL,
@@ -31,11 +31,20 @@ CREATE TABLE "public"."Token" (
     CONSTRAINT "Token_pkey" PRIMARY KEY ("id")
 );
 
--- CreateIndex
-CREATE UNIQUE INDEX "User_email_key" ON "public"."User"("email");
+-- CreateTable
+CREATE TABLE "RateLimiterFlexible" (
+    "key" TEXT NOT NULL,
+    "points" INTEGER NOT NULL,
+    "expire" TIMESTAMP(3),
+
+    CONSTRAINT "RateLimiterFlexible_pkey" PRIMARY KEY ("key")
+);
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Token_token_key" ON "public"."Token"("token");
+CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "Token_token_key" ON "Token"("token");
 
 -- AddForeignKey
-ALTER TABLE "public"."Token" ADD CONSTRAINT "Token_userId_fkey" FOREIGN KEY ("userId") REFERENCES "public"."User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Token" ADD CONSTRAINT "Token_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

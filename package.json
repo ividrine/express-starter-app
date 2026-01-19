@@ -12,7 +12,8 @@
   },
   "scripts": {
     "build": "rm -rf ./dist/ && node --env-file=.env ./node_modules/prisma/build/index.js generate && tsc && tsc-alias",
-    "generate": "",
+    "generate": "node --env-file=.env ./node_modules/prisma/build/index.js generate",
+    "migrate-dev": "node --env-file=.env ./node_modules/prisma/build/index.js migrate dev",
     "lint": "eslint",
     "prod": "sh ./scripts/run-prod.sh",
     "dev": "sh ./scripts/run-dev.sh",
@@ -24,19 +25,10 @@
   "keywords": [
     "node",
     "express",
-    "rest",
-    "api",
-    "boilerplate",
-    "sql",
     "postgresql",
     "prisma",
-    "jest",
-    "docker",
-    "zod",
-    "eslint",
-    "prettier",
-    "scaffold",
-    "generator"
+    "vitest",
+    "docker"
   ],
   "author": "Isaac Vidrine",
   "license": "MIT",
@@ -99,7 +91,6 @@
     "cors": "^2.8.5",
     "dayjs": "^1.11.13",
     "express": "^5.1.0",
-    "express-rate-limit": "^8.0.1",
     "express-xss-sanitizer": "^2.0.0",
     "helmet": "^8.1.0",
     "http-status": "^2.1.0",
@@ -108,6 +99,7 @@
     "nodemailer": "^7.0.5",
     "ora": "^8.2.0",
     "pg": "^8.16.3",
+    "rate-limiter-flexible": "^9.0.1",
     "swagger-jsdoc": "^6.2.8",
     "winston": "^3.17.0",
     "zod": "^4.0.14"
