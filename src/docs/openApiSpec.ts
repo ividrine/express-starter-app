@@ -8,12 +8,12 @@ const options = {
   definition: {
     openapi: "3.1.1",
     info: {
-      title: "express-api-sql API Documentation",
+      title: "Express App API Documentation",
       version,
       description: "",
       license: {
         name: "MIT",
-        url: "https://github.com/ividrine/express-api-sql/blob/main/LICENSE"
+        url: "https://github.com/ividrine/express-starter-app/blob/main/LICENSE"
       }
     },
     servers: [
