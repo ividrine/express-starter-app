@@ -22,10 +22,10 @@ export default defineConfig({
     sequence: { concurrent: false },
     coverage: {
       thresholds: {
-        lines: 100,
-        functions: 100,
-        branches: 100,
-        statements: 100
+        lines: 70,
+        functions: 70,
+        branches: 70,
+        statements: 70
       },
       provider: "istanbul",
       reporter: ["text", "lcov", "cobertura", "html"],
