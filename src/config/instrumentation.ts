@@ -12,9 +12,6 @@ import {
   ATTR_SERVICE_VERSION
 } from "@opentelemetry/semantic-conventions";
 
-import config from "./config";
-import logger from "./logger";
-
 import packageJson from "../../package.json" with { type: "json" };
 
 /**
@@ -39,7 +36,9 @@ import packageJson from "../../package.json" with { type: "json" };
 
 const { name, version } = packageJson;
 
-const addInstrumentation = () => {
+if (process.env.OTEL_COLLECTOR_URL) {
+  const collectorUrl = process.env.OTEL_COLLECTOR_URL;
+
   // Create a resource with service name and version for Node SDK
   const resource = resourceFromAttributes({
     [ATTR_SERVICE_NAME]: name,
@@ -48,15 +47,15 @@ const addInstrumentation = () => {
 
   // Define OTLP exporters
   const traceExporter = new OTLPTraceExporter({
-    url: `${config.otel_collector_url}/v1/traces`
+    url: `${collectorUrl}/v1/traces`
   });
 
   const metricExporter = new OTLPMetricExporter({
-    url: `${config.otel_collector_url}/v1/metrics`
+    url: `${collectorUrl}/v1/metrics`
   });
 
   const logsExporter = new OTLPLogExporter({
-    url: `${config.otel_collector_url}/v1/logs`
+    url: `${collectorUrl}/v1/logs`
   });
 
   // Define metric reader
@@ -86,12 +85,4 @@ const addInstrumentation = () => {
   process.on("SIGTERM", () => {
     sdk.shutdown();
   });
-};
-
-if (!config.otel_collector_url) {
-  logger.warn(
-    "OTEL_COLLECTOR_URL is not defined. Telemetry data will not be collected."
-  );
-} else {
-  addInstrumentation();
 }
