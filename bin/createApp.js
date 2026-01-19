@@ -62,7 +62,7 @@ const main = async () => {
   mkdirSync(projectDir, { recursive: true });
 
   await runCommand(
-    `git clone --quiet https://github.com/ividrine/express-api-sql.git ${projectDir}`,
+    `git clone --quiet https://github.com/ividrine/express-starter-app.git ${projectDir}`,
     () => spinner.succeed(),
     () => spinner.fail("Failed to clone repository")
   );
