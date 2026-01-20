@@ -1,6 +1,8 @@
 name: test
 
 on:
+  push:
+    branches: [main, development]
   pull_request:
     branches: [main, development]
 
@@ -41,9 +43,11 @@ jobs:
       - name: Run tests
         run: pnpm test ci --coverage
 
-      - name: Upload coverage artifact
-        uses: actions/upload-artifact@v4
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v5
         with:
-          name: coverage-report
-          path: coverage/
-          retention-days: 1
+          files: ./coverage/lcov.info,./coverage/cobertura-coverage.xml
+          fail_ci_if_error: true
+          verbose: true
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
