@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.3](https://github.com/ividrine/express-starter-app/compare/v1.0.2...v1.0.3) (2026-01-20)
+
+
+### Bug Fixes
+
+* dockerfile path ([a9fd99a](https://github.com/ividrine/express-starter-app/commit/a9fd99ada31292f9c2062ce7dee0ded3435a9c5e))
+
 ## [1.0.2](https://github.com/ividrine/express-starter-app/compare/v1.0.1...v1.0.2) (2026-01-20)
 
 
