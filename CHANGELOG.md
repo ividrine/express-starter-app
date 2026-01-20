@@ -1,5 +1,14 @@
 # Changelog
 
+## [1.0.6](https://github.com/ividrine/express-starter-app/compare/v1.0.5...v1.0.6) (2026-01-20)
+
+
+### Bug Fixes
+
+* publish subject-name ([51ca908](https://github.com/ividrine/express-starter-app/commit/51ca9080ec5cd94be5db8c0d84cad550a1c5ca28))
+* remove triggering ci for release PRs ([7aabf02](https://github.com/ividrine/express-starter-app/commit/7aabf02e5f79dbe5375b2194db0a28908a2fd73e))
+* run migrate deploy in prod script ([a43da19](https://github.com/ividrine/express-starter-app/commit/a43da19cd0ba831f351ebbb9063feaee7b74aa63))
+
 ## [1.0.5](https://github.com/ividrine/express-starter-app/compare/v1.0.4...v1.0.5) (2026-01-20)
 
 
