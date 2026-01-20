@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.5](https://github.com/ividrine/express-starter-app/compare/v1.0.4...v1.0.5) (2026-01-20)
+
+
+### Bug Fixes
+
+* prisma config env error ([b30d59a](https://github.com/ividrine/express-starter-app/commit/b30d59a4e790b43f1adec10208386caea8d1842e))
+
 ## [1.0.4](https://github.com/ividrine/express-starter-app/compare/v1.0.3...v1.0.4) (2026-01-20)
 
 
