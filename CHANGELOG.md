@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.0](https://github.com/ividrine/express-starter-app/compare/v1.0.6...v1.1.0) (2026-01-20)
+
+
+### Features
+
+* publish npm workflow ([fcc1d96](https://github.com/ividrine/express-starter-app/commit/fcc1d968c2a544778e9bb05bba0ef8f02ae4cc11))
+
 ## [1.0.6](https://github.com/ividrine/express-starter-app/compare/v1.0.5...v1.0.6) (2026-01-20)
 
 
