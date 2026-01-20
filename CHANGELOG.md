@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.1](https://github.com/ividrine/express-starter-app/compare/v1.1.0...v1.1.1) (2026-01-20)
+
+
+### Bug Fixes
+
+* **publish-npm:** add env ([5aceb69](https://github.com/ividrine/express-starter-app/commit/5aceb69d9fede73220a0e1af6c3b1ac4a596f302))
+
 ## [1.1.0](https://github.com/ividrine/express-starter-app/compare/v1.0.6...v1.1.0) (2026-01-20)
 
 
