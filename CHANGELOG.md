@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.5](https://github.com/ividrine/express-starter-app/compare/v1.1.4...v1.1.5) (2026-01-20)
+
+
+### Bug Fixes
+
+* prevent md file changes from triggering ci/cd ([9881ae3](https://github.com/ividrine/express-starter-app/commit/9881ae32448fc82e2f16d6e877d9010ad777172f))
+
 ## [1.1.4](https://github.com/ividrine/express-starter-app/compare/v1.1.3...v1.1.4) (2026-01-20)
 
 
