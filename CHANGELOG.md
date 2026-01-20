@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.3](https://github.com/ividrine/express-starter-app/compare/v1.1.2...v1.1.3) (2026-01-20)
+
+
+### Bug Fixes
+
+* **publish-npm:** add no-git-checks flag ([415fb92](https://github.com/ividrine/express-starter-app/commit/415fb92eb362446411b8de14bb3bd3c9b960af19))
+
 ## [1.1.2](https://github.com/ividrine/express-starter-app/compare/v1.1.1...v1.1.2) (2026-01-20)
 
 
