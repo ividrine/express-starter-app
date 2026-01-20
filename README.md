@@ -47,7 +47,13 @@ This project provides full application observability. It uses [OpenTelemetry](ht
 
 ### Github Actions
 
-CI/CD is implemented using Github Actions with support for running tests, coverage, and deployment to docker hub.
+CI/CD is implemented using Github Actions. It has the following workflows:
+
+- lint.yaml: check for code quality
+- test.yaml: run tests and upload coverage to codecov
+- release-please.yaml: create a release PR and generate github release
+- publish-docker.yaml: publish image to docker hub
+- publish-npm.yaml: publish package to npm
 
 ### Packages
 
