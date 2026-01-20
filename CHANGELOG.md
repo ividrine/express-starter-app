@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.4](https://github.com/ividrine/express-starter-app/compare/v1.0.3...v1.0.4) (2026-01-20)
+
+
+### Bug Fixes
+
+* build script ([2f25a5e](https://github.com/ividrine/express-starter-app/commit/2f25a5ef4a92274a83da00244644e693332eec99))
+
 ## [1.0.3](https://github.com/ividrine/express-starter-app/compare/v1.0.2...v1.0.3) (2026-01-20)
 
 
