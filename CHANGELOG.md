@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.2](https://github.com/ividrine/express-starter-app/compare/v1.0.1...v1.0.2) (2026-01-20)
+
+
+### Bug Fixes
+
+* update release-please workflow to use pat ([#13](https://github.com/ividrine/express-starter-app/issues/13)) ([13930c0](https://github.com/ividrine/express-starter-app/commit/13930c050a0e73d1afc3110379af5477d4623b70))
+
 ## [1.0.1](https://github.com/ividrine/express-starter-app/compare/v1.0.0...v1.0.1) (2026-01-20)
 
 
