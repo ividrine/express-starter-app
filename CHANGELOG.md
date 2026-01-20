@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.2](https://github.com/ividrine/express-starter-app/compare/v1.1.1...v1.1.2) (2026-01-20)
+
+
+### Bug Fixes
+
+* **publish-npm:** use pnpm to publish ([55e6e1a](https://github.com/ividrine/express-starter-app/commit/55e6e1a06c0328a548af6a023e1732ac9366eda1))
+
 ## [1.1.1](https://github.com/ividrine/express-starter-app/compare/v1.1.0...v1.1.1) (2026-01-20)
 
 
