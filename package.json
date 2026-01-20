@@ -16,7 +16,7 @@
     "node": ">=22.0.0"
   },
   "scripts": {
-    "build": "rm -rf ./dist/ && node --env-file=.env ./node_modules/prisma/build/index.js generate && tsc && tsc-alias",
+    "build": "rm -rf ./dist/ && prisma generate && tsc && tsc-alias",
     "generate": "node --env-file=.env ./node_modules/prisma/build/index.js generate",
     "migrate-dev": "node --env-file=.env ./node_modules/prisma/build/index.js migrate dev",
     "lint": "eslint",
