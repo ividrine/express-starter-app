@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.4](https://github.com/ividrine/express-starter-app/compare/v1.1.3...v1.1.4) (2026-01-20)
+
+
+### Bug Fixes
+
+* **publish-npm:** use node 24 for publishing ([4abbcf2](https://github.com/ividrine/express-starter-app/commit/4abbcf2bc12067ce09d64e756519655fdc92eff0))
+
 ## [1.1.3](https://github.com/ividrine/express-starter-app/compare/v1.1.2...v1.1.3) (2026-01-20)
 
 
